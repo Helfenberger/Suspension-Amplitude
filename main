@@ -1,0 +1,97 @@
+/*********************************************************************************************
+ *   Program Name: Suspension Amplitude                            Author(s): Andrew Helfenberger
+ *   ENGR 200.02                                                   Assignment # 8
+ *   Date: 11/12/2015
+ *   
+ *   Program Description: Print out matrix that gives amplitude of vibrations 
+ *                        for all the possible suspension values
+ *
+ *********************************************************************************************
+ *
+ *   Variables  |  use                     |  units
+ *   --------------------------------------------------------------------------
+ *   num_speed  |  number speed	           |  
+ *   num_ratio  |  number ratio            |  
+ *  num_diameter|  number diameter         | 
+ *********************************************************************************************/
+
+
+ /* Header Files */
+#include <stdio.h>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#define NUM_SPEED     2
+#define NUM_RATIO     3
+#define NUM_DIAMETER  5
+#define pi 3.14
+
+ /*Start of main function*/
+ int main(void)
+ {
+    /* declarations: */
+    char c;
+	double speed[] = {20, 20}, ratio[] = {1.0, 1.5, 2.0}, coefficient[] = {0.93, 0.89, 0.83};
+	double drag[NUM_SPEED][NUM_RATIO][NUM_DIAMETER], diameter, delta_diameter = 0.25;
+	int i, j, k;
+
+	for(k = 0; k < NUM_SPEED; k++)
+	{
+		//The number of ratios and coefficients are the same
+		for(j = 0; j < NUM_RATIO; j++)
+		{
+			diameter = 1.5;
+			for( i = 0; i < NUM_DIAMETER; i++)
+			{
+				//The drag at each diameter and ratio for both speeds.
+				drag[k][j][i] = 0.5*1.225*0.25*M_PI*diameter*diameter*speed[k]*speed[k]*coefficient[j];
+				diameter += delta_diameter;
+			}
+		}
+	}
+
+    // Print the results //
+    
+	for(k = 0; k < NUM_SPEED; k++)
+	{
+		printf("\nAmplitude of vibrations at %5.2f meters per second\n\n", speed[k]);
+
+		//Label the labels.
+		printf("Ratio\\Diameter|\t");
+
+		//Print off column labels
+		diameter = 1.5;
+		for(i = 0; i < NUM_DIAMETER; i++)
+		{
+			printf("%5.1f\t", diameter);
+			diameter += delta_diameter;
+		}
+		printf("\n_____________________________________________________________\n");
+
+
+		//The number of ratios and coefficients are the same
+		for(j = 0; j < NUM_RATIO; j++)
+		{
+			/*Print row label*/
+			printf("   %5.2f      |\t",   ratio[j]);
+
+			/*Print the data*/
+			for( i = 0; i < NUM_DIAMETER; i++)
+			{
+				printf("%5.1f\t", drag[k][j][i]); 
+			}
+			printf("\n");
+		}
+	}
+
+
+   /*This keeps the window open*/
+    printf("\n\nPress enter to q to quit.\n");
+	do{ 
+	   c = getchar();
+	}while( c != 'q' );
+
+   /*end the program*/
+   return 0;
+ }
